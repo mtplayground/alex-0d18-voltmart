@@ -20,8 +20,8 @@ export function CategoryFilter({ categories, selectedCategorySlug }: CategoryFil
             aria-current={selectedCategorySlug ? undefined : "page"}
             className={
               selectedCategorySlug
-                ? "inline-flex min-h-10 items-center rounded-full border border-border bg-panel-strong px-4 text-sm font-semibold text-muted transition hover:border-electric/40 hover:text-electric"
-                : "inline-flex min-h-10 items-center rounded-full border border-white/70 bg-[linear-gradient(135deg,#2364ff,#7c3aed,#ff5a5f)] px-4 text-sm font-black text-white shadow-glow"
+                ? "inline-flex min-h-11 items-center rounded-full border border-white/80 bg-white/90 px-4 text-sm font-bold text-ink shadow-[0_10px_24px_rgb(23_32_51_/_0.08)] transition hover:border-electric/40 hover:text-electric"
+                : "inline-flex min-h-11 items-center rounded-full border border-white/70 bg-[linear-gradient(135deg,#1f57e7,#6d28d9,#c93445)] px-4 text-sm font-black text-white shadow-glow"
             }
           >
             All
@@ -37,8 +37,8 @@ export function CategoryFilter({ categories, selectedCategorySlug }: CategoryFil
                 aria-current={isSelected ? "page" : undefined}
                 className={
                   isSelected
-                    ? "inline-flex min-h-10 items-center rounded-full border border-white/70 bg-[linear-gradient(135deg,#2364ff,#7c3aed,#ff5a5f)] px-4 text-sm font-black text-white shadow-glow"
-                    : "inline-flex min-h-10 items-center rounded-full border border-white/80 bg-white/75 px-4 text-sm font-semibold text-muted shadow-[0_10px_24px_rgb(23_32_51_/_0.08)] transition hover:border-electric/40 hover:text-electric"
+                    ? "inline-flex min-h-11 items-center rounded-full border border-white/70 bg-[linear-gradient(135deg,#1f57e7,#6d28d9,#c93445)] px-4 text-sm font-black text-white shadow-glow"
+                    : "inline-flex min-h-11 items-center rounded-full border border-white/80 bg-white/90 px-4 text-sm font-bold text-ink shadow-[0_10px_24px_rgb(23_32_51_/_0.08)] transition hover:border-electric/40 hover:text-electric"
                 }
               >
                 {category.name}

@@ -95,7 +95,7 @@ export default async function CartPage() {
                         </div>
 
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <div className="flex items-center rounded-full border border-border bg-panel px-2 py-1">
+                          <div className="flex items-center rounded-full border border-white/80 bg-white/90 px-2 py-1">
                             <form
                               action={submitCartItemQuantityUpdate.bind(
                                 null,
@@ -107,7 +107,7 @@ export default async function CartPage() {
                                 type="submit"
                                 disabled={item.quantity <= 1}
                                 aria-label={`Decrease quantity for ${product.name}`}
-                                className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-full text-lg font-black text-ink transition hover:bg-sun/30 disabled:cursor-not-allowed disabled:text-muted"
+                                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-black text-ink transition hover:bg-sun/30 disabled:cursor-not-allowed disabled:text-muted"
                               >
                                 -
                               </button>
@@ -126,7 +126,7 @@ export default async function CartPage() {
                                 type="submit"
                                 disabled={item.quantity >= maxCartItemQuantity}
                                 aria-label={`Increase quantity for ${product.name}`}
-                                className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-full text-lg font-black text-ink transition hover:bg-mint/20 disabled:cursor-not-allowed disabled:text-muted"
+                                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-black text-ink transition hover:bg-mint/20 disabled:cursor-not-allowed disabled:text-muted"
                               >
                                 +
                               </button>
@@ -140,7 +140,7 @@ export default async function CartPage() {
                             <form action={submitCartItemRemoval.bind(null, product.id)}>
                               <button
                                 type="submit"
-                                className="text-sm font-bold text-coral underline-offset-4 hover:underline"
+                                className="min-h-11 px-1 text-sm font-black text-coral underline-offset-4 hover:underline"
                               >
                                 Remove
                               </button>
