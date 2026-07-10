@@ -1,14 +1,47 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { getSiteUrl, siteConfig } from "@/lib/seo";
+
 import "./globals.css";
 
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
+  applicationName: siteConfig.name,
   title: {
-    default: "Storefront",
-    template: "%s | Storefront",
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "A storefront foundation built with the Next.js App Router.",
+  description: siteConfig.description,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: siteConfig.locale,
+    url: "/",
+    siteName: siteConfig.name,
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 type RootLayoutProps = Readonly<{
