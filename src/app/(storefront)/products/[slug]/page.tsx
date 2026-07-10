@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { submitAddCartItem } from "@/app/(storefront)/cart/actions";
 import { getProductBySlug, listProducts } from "@/lib/catalog";
 import { formatCurrencyFromCents } from "@/lib/format";
 import { getProductAccentClass, getProductImageSrc } from "@/lib/product-images";
@@ -134,9 +135,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               </span>
             </div>
 
-            <form className="mt-8">
+            <form action={submitAddCartItem.bind(null, product.id, 1)} className="mt-8">
               <button
-                type="button"
+                type="submit"
                 disabled={!product.inStock}
                 className="primary-action w-full px-5 text-base"
               >
