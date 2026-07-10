@@ -1,6 +1,10 @@
 import type { Prisma, PrismaClient } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
+import {
+  uploadProductImageFromFormData,
+  type ProductImageUploader,
+} from "@/lib/product-image-upload";
 
 export type AdminProductClient = Pick<PrismaClient, "category" | "product">;
 
@@ -19,6 +23,7 @@ export const productFormFieldNames = [
   "description",
   "price",
   "imageKeys",
+  "imageUpload",
   "inStock",
   "isActive",
 ] as const;
@@ -43,6 +48,7 @@ export const emptyProductFormValues: ProductFormValues = {
   description: "",
   price: "",
   imageKeys: "",
+  imageUpload: "",
   inStock: "on",
   isActive: "on",
 };
@@ -131,6 +137,7 @@ export function valuesFromProductFormData(formData: FormData): ProductFormValues
     description: readString(formData, "description"),
     price: readString(formData, "price"),
     imageKeys: readString(formData, "imageKeys"),
+    imageUpload: "",
     inStock: formData.get("inStock") === "on" ? "on" : "",
     isActive: formData.get("isActive") === "on" ? "on" : "",
   };
@@ -144,8 +151,16 @@ export function valuesFromProduct(product: AdminProductWithCategory): ProductFor
     description: product.description,
     price: formatPriceInput(product.priceCents),
     imageKeys: product.imageKeys.join("\n"),
+    imageUpload: "",
     inStock: product.inStock ? "on" : "",
     isActive: product.isActive ? "on" : "",
+  };
+}
+
+function valuesWithUploadedImage(values: ProductFormValues, imageKey: string) {
+  return {
+    ...values,
+    imageKeys: [...parseImageKeys(values.imageKeys), imageKey].join("\n"),
   };
 }
 
@@ -236,6 +251,7 @@ export async function listAdminProductCategories(client: AdminProductClient = pr
 export async function createAdminProduct(
   formData: FormData,
   client: AdminProductClient = prisma,
+  uploadImage: ProductImageUploader = uploadProductImageFromFormData,
 ): Promise<ProductFormState> {
   const values = valuesFromProductFormData(formData);
   const validation = validateProductValues(values);
@@ -244,13 +260,25 @@ export async function createAdminProduct(
     return fail("Review the highlighted fields", values, validation.errors);
   }
 
+  const uploadResult = await uploadImage(formData);
+  const productValues =
+    uploadResult.status === "uploaded"
+      ? valuesWithUploadedImage(values, uploadResult.imageKey)
+      : values;
+
+  if (uploadResult.status === "error") {
+    return fail("Review the highlighted fields", values, {
+      imageUpload: uploadResult.message,
+    });
+  }
+
   try {
     await client.product.create({
-      data: productDataFromValues(values, validation.priceCents),
+      data: productDataFromValues(productValues, validation.priceCents),
     });
   } catch (error) {
     if (isUniqueConstraintError(error)) {
-      return fail("Product slug already exists", values, {
+      return fail("Product slug already exists", productValues, {
         slug: "Slug must be unique",
       });
     }
@@ -258,19 +286,32 @@ export async function createAdminProduct(
     throw error;
   }
 
-  return success("Product created", values);
+  return success("Product created", productValues);
 }
 
 export async function updateAdminProduct(
   productId: string,
   formData: FormData,
   client: AdminProductClient = prisma,
+  uploadImage: ProductImageUploader = uploadProductImageFromFormData,
 ): Promise<ProductFormState> {
   const values = valuesFromProductFormData(formData);
   const validation = validateProductValues(values);
 
   if (!validation.success || validation.priceCents === null) {
     return fail("Review the highlighted fields", values, validation.errors);
+  }
+
+  const uploadResult = await uploadImage(formData);
+  const productValues =
+    uploadResult.status === "uploaded"
+      ? valuesWithUploadedImage(values, uploadResult.imageKey)
+      : values;
+
+  if (uploadResult.status === "error") {
+    return fail("Review the highlighted fields", values, {
+      imageUpload: uploadResult.message,
+    });
   }
 
   try {
@@ -278,11 +319,11 @@ export async function updateAdminProduct(
       where: {
         id: productId,
       },
-      data: productDataFromValues(values, validation.priceCents),
+      data: productDataFromValues(productValues, validation.priceCents),
     });
   } catch (error) {
     if (isUniqueConstraintError(error)) {
-      return fail("Product slug already exists", values, {
+      return fail("Product slug already exists", productValues, {
         slug: "Slug must be unique",
       });
     }
@@ -290,7 +331,7 @@ export async function updateAdminProduct(
     throw error;
   }
 
-  return success("Product updated", values);
+  return success("Product updated", productValues);
 }
 
 export async function deleteAdminProduct(productId: string, client: AdminProductClient = prisma) {

@@ -40,7 +40,7 @@ export function AdminProductForm({
   const values = state.values;
 
   return (
-    <form action={formAction} className="space-y-5">
+    <form action={formAction} encType="multipart/form-data" className="space-y-5">
       {state.message && state.status === "error" ? (
         <p
           className="rounded-card border border-coral/30 bg-coral/10 px-4 py-3 text-sm font-bold text-ink"
@@ -153,6 +153,22 @@ export function AdminProductForm({
           {state.errors.imageKeys ? (
             <span className="mt-2 block text-sm font-semibold text-coral">
               {state.errors.imageKeys}
+            </span>
+          ) : null}
+        </label>
+
+        <label className="block md:col-span-2" htmlFor="product-image-upload">
+          <span className="text-sm font-black text-ink">Upload image</span>
+          <input
+            id="product-image-upload"
+            name="imageUpload"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            className="mt-2 block w-full rounded-card border border-border bg-panel px-4 py-3 text-base text-ink file:mr-4 file:rounded-card file:border-0 file:bg-electric file:px-4 file:py-2 file:text-sm file:font-black file:text-white focus:border-electric focus:outline-none focus:ring-4 focus:ring-electric/15"
+          />
+          {state.errors.imageUpload ? (
+            <span className="mt-2 block text-sm font-semibold text-coral">
+              {state.errors.imageUpload}
             </span>
           ) : null}
         </label>
