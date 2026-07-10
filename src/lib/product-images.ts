@@ -12,7 +12,16 @@ export function getProductImageSrc(imageKey: string | undefined) {
     return fallbackProductImage;
   }
 
-  return imageKey.startsWith("/") ? imageKey : `/${imageKey}`;
+  if (imageKey.startsWith("/")) {
+    return imageKey;
+  }
+
+  const signedImagePath = imageKey
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+
+  return `/api/img/${signedImagePath}`;
 }
 
 export function getProductAccentClass(categorySlug: string) {

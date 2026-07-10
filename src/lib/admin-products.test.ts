@@ -63,7 +63,9 @@ describe("admin product helpers", () => {
   });
 
   it("creates products with normalized form values", async () => {
-    await expect(createAdminProduct(createFormData(), client)).resolves.toMatchObject({
+    const uploadImage = vi.fn().mockResolvedValue({ status: "empty" });
+
+    await expect(createAdminProduct(createFormData(), client, uploadImage)).resolves.toMatchObject({
       status: "success",
       message: "Product created",
     });
@@ -80,6 +82,51 @@ describe("admin product helpers", () => {
         isActive: true,
       },
     });
+    expect(uploadImage).toHaveBeenCalledWith(expect.any(FormData));
+  });
+
+  it("appends uploaded image keys when creating products", async () => {
+    const uploadImage = vi.fn().mockResolvedValue({
+      status: "uploaded",
+      imageKey: "products/uploaded-phone.jpg",
+    });
+
+    await expect(createAdminProduct(createFormData(), client, uploadImage)).resolves.toMatchObject({
+      status: "success",
+      values: {
+        imageKeys:
+          "/placeholders/catalog/phones.svg\n/placeholders/catalog/accessories.svg\nproducts/uploaded-phone.jpg",
+      },
+    });
+
+    expect(client.product.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          imageKeys: [
+            "/placeholders/catalog/phones.svg",
+            "/placeholders/catalog/accessories.svg",
+            "products/uploaded-phone.jpg",
+          ],
+        }),
+      }),
+    );
+  });
+
+  it("returns upload errors without writing products", async () => {
+    const uploadImage = vi.fn().mockResolvedValue({
+      status: "error",
+      message: "Image upload failed",
+    });
+
+    await expect(createAdminProduct(createFormData(), client, uploadImage)).resolves.toMatchObject({
+      status: "error",
+      message: "Review the highlighted fields",
+      errors: {
+        imageUpload: "Image upload failed",
+      },
+    });
+
+    expect(client.product.create).not.toHaveBeenCalled();
   });
 
   it("generates a slug from the name when the slug field is blank", async () => {
@@ -95,6 +142,8 @@ describe("admin product helpers", () => {
   });
 
   it("returns validation errors without writing invalid products", async () => {
+    const uploadImage = vi.fn().mockResolvedValue({ status: "uploaded" });
+
     await expect(
       createAdminProduct(
         createFormData({
@@ -104,6 +153,7 @@ describe("admin product helpers", () => {
           price: "12.999",
         }),
         client,
+        uploadImage,
       ),
     ).resolves.toMatchObject({
       status: "error",
@@ -117,6 +167,7 @@ describe("admin product helpers", () => {
     });
 
     expect(client.product.create).not.toHaveBeenCalled();
+    expect(uploadImage).not.toHaveBeenCalled();
   });
 
   it("maps duplicate slugs to a form error", async () => {
@@ -132,6 +183,8 @@ describe("admin product helpers", () => {
   });
 
   it("updates products with parsed price, booleans, and image keys", async () => {
+    const uploadImage = vi.fn().mockResolvedValue({ status: "empty" });
+
     await expect(
       updateAdminProduct(
         "product_1",
@@ -141,6 +194,7 @@ describe("admin product helpers", () => {
           inStock: "",
         }),
         client,
+        uploadImage,
       ),
     ).resolves.toMatchObject({
       status: "success",
@@ -158,6 +212,30 @@ describe("admin product helpers", () => {
         isActive: true,
       }),
     });
+  });
+
+  it("appends uploaded image keys when updating products", async () => {
+    const uploadImage = vi.fn().mockResolvedValue({
+      status: "uploaded",
+      imageKey: "products/updated-phone.webp",
+    });
+
+    await updateAdminProduct(
+      "product_1",
+      createFormData({
+        imageKeys: "products/existing-phone.jpg",
+      }),
+      client,
+      uploadImage,
+    );
+
+    expect(client.product.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          imageKeys: ["products/existing-phone.jpg", "products/updated-phone.webp"],
+        }),
+      }),
+    );
   });
 
   it("soft deletes products by marking them inactive", async () => {
@@ -193,6 +271,7 @@ describe("admin product helpers", () => {
       categoryId: category.id,
       price: "499.00",
       imageKeys: "a.svg\nb.svg",
+      imageUpload: "",
       inStock: "on",
       isActive: "",
     });
