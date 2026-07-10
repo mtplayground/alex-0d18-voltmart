@@ -1,0 +1,2 @@
+-- Baseline migration for the PostgreSQL-backed Prisma schema.
+-- Application data models are intentionally introduced in later issue-specific migrations.
