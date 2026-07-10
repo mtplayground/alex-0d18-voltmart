@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 640 480">
+  <title id="title">Phone placeholder</title>
+  <desc id="desc">Colorful phone product placeholder image.</desc>
+  <rect width="640" height="480" rx="32" fill="#fff8ef" />
+  <path d="M0 96h640v288H0z" fill="#2364ff" opacity=".12" />
+  <path d="M0 0h640v160H0z" fill="#ffca3a" opacity=".22" />
+  <rect x="224" y="72" width="192" height="336" rx="36" fill="#172033" />
+  <rect x="246" y="106" width="148" height="268" rx="20" fill="#edf7ff" />
+  <circle cx="320" cy="390" r="8" fill="#fff8ef" />
+  <circle cx="300" cy="134" r="10" fill="#ff5a5f" />
+  <circle cx="328" cy="134" r="10" fill="#16c79a" />
+  <path d="M262 250c36-54 80-54 116 0" fill="none" stroke="#2364ff" stroke-width="16" stroke-linecap="round" />
+</svg>

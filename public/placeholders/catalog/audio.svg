@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 640 480">
+  <title id="title">Audio placeholder</title>
+  <desc id="desc">Colorful audio product placeholder image.</desc>
+  <rect width="640" height="480" rx="32" fill="#fff8ef" />
+  <path d="M0 320h640v160H0z" fill="#7c3aed" opacity=".16" />
+  <path d="M196 244c0-78 50-134 124-134s124 56 124 134" fill="none" stroke="#172033" stroke-width="30" stroke-linecap="round" />
+  <rect x="144" y="236" width="84" height="132" rx="34" fill="#2364ff" />
+  <rect x="412" y="236" width="84" height="132" rx="34" fill="#ff5a5f" />
+  <circle cx="320" cy="292" r="54" fill="#16c79a" opacity=".92" />
+  <path d="M286 292h68" stroke="#fff8ef" stroke-width="14" stroke-linecap="round" />
+</svg>
