@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 640 480">
+  <title id="title">Accessory placeholder</title>
+  <desc id="desc">Colorful accessory product placeholder image.</desc>
+  <rect width="640" height="480" rx="32" fill="#fff8ef" />
+  <path d="M0 0h640v480H0z" fill="#ff5a5f" opacity=".1" />
+  <rect x="178" y="150" width="132" height="184" rx="24" fill="#172033" />
+  <rect x="206" y="122" width="28" height="42" rx="10" fill="#5f6575" />
+  <rect x="254" y="122" width="28" height="42" rx="10" fill="#5f6575" />
+  <path d="M338 168c74 0 74 116 148 116" fill="none" stroke="#2364ff" stroke-width="24" stroke-linecap="round" />
+  <circle cx="502" cy="284" r="34" fill="#16c79a" />
+  <path d="M226 238h36" stroke="#ffca3a" stroke-width="16" stroke-linecap="round" />
+</svg>
