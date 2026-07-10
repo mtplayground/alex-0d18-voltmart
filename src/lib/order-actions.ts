@@ -9,11 +9,19 @@ import {
 } from "@/lib/checkout-validation";
 import { getCartLineTotalCents, getCartSubtotalCents } from "@/lib/cart-summary";
 import { prisma } from "@/lib/db";
+import { sendNewOrderAdminNotification, type NewOrderNotification } from "@/lib/order-email";
 
 type OrderReference = Readonly<{
   id: string;
   orderNumber: string;
 }>;
+
+type OrderSubmissionResult = Readonly<{
+  state: CheckoutFormState;
+  notification: NewOrderNotification | null;
+}>;
+
+type OrderNotificationSender = (notification: NewOrderNotification) => Promise<unknown>;
 
 type OrderTransactionClient = CartClient & {
   cart: CartClient["cart"] & Pick<PrismaClient["cart"], "delete">;
@@ -34,6 +42,16 @@ function fail(message: string, values: CheckoutFormValues): CheckoutFormState {
   };
 }
 
+function toResult(
+  state: CheckoutFormState,
+  notification: NewOrderNotification | null = null,
+): OrderSubmissionResult {
+  return {
+    state,
+    notification,
+  };
+}
+
 export function createOrderNumber(now = new Date(), randomId = crypto.randomUUID()) {
   const datePart = now.toISOString().slice(0, 10).replaceAll("-", "");
   const suffix = randomId.replaceAll("-", "").slice(0, 8).toUpperCase();
@@ -46,6 +64,7 @@ export async function submitOrderForSession(
   sessionId: string | null,
   client: OrderSubmissionClient = prisma,
   orderNumber = createOrderNumber(),
+  sendNotification: OrderNotificationSender = sendNewOrderAdminNotification,
 ): Promise<CheckoutFormState> {
   const validationState = validateCheckoutFormData(formData);
 
@@ -57,11 +76,11 @@ export async function submitOrderForSession(
     return fail("Cart is empty", validationState.values);
   }
 
-  return client.$transaction(async (transactionClient) => {
+  const result = await client.$transaction(async (transactionClient) => {
     const cart = await getCartBySessionId(sessionId, transactionClient);
 
     if (!cart || cart.items.length === 0) {
-      return fail("Cart is empty", validationState.values);
+      return toResult(fail("Cart is empty", validationState.values));
     }
 
     const unavailableItem = cart.items.find(
@@ -69,10 +88,15 @@ export async function submitOrderForSession(
     );
 
     if (unavailableItem) {
-      return fail(`${unavailableItem.product.name} is not available`, validationState.values);
+      return toResult(
+        fail(`${unavailableItem.product.name} is not available`, validationState.values),
+      );
     }
 
     const subtotalCents = getCartSubtotalCents(cart);
+    const shippingCents = 0;
+    const taxCents = 0;
+    const totalCents = subtotalCents;
     const order = (await transactionClient.order.create({
       data: {
         orderNumber,
@@ -87,9 +111,9 @@ export async function submitOrderForSession(
         shippingPostalCode: validationState.values.shippingPostalCode,
         shippingCountry: validationState.values.shippingCountry,
         subtotalCents,
-        shippingCents: 0,
-        taxCents: 0,
-        totalCents: subtotalCents,
+        shippingCents,
+        taxCents,
+        totalCents,
         items: {
           create: cart.items.map((item) => ({
             productId: item.productId,
@@ -119,15 +143,52 @@ export async function submitOrderForSession(
       },
     });
 
-    return {
-      status: "success",
-      message: "Order submitted",
-      orderId: order.id,
-      orderNumber: order.orderNumber,
-      values: validationState.values,
-      errors: {},
-    };
+    return toResult(
+      {
+        status: "success",
+        message: "Order submitted",
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        values: validationState.values,
+        errors: {},
+      },
+      {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        customerName: validationState.values.customerName,
+        customerEmail: validationState.values.customerEmail,
+        customerPhone: validationState.values.customerPhone || null,
+        shippingName: validationState.values.shippingName,
+        shippingAddressLine1: validationState.values.shippingAddressLine1,
+        shippingAddressLine2: validationState.values.shippingAddressLine2 || null,
+        shippingCity: validationState.values.shippingCity,
+        shippingRegion: validationState.values.shippingRegion,
+        shippingPostalCode: validationState.values.shippingPostalCode,
+        shippingCountry: validationState.values.shippingCountry,
+        subtotalCents,
+        shippingCents,
+        taxCents,
+        totalCents,
+        items: cart.items.map((item) => ({
+          productName: item.product.name,
+          productSlug: item.product.slug,
+          unitPriceCents: item.product.priceCents,
+          quantity: item.quantity,
+          lineTotalCents: getCartLineTotalCents(item),
+        })),
+      },
+    );
   });
+
+  if (result.state.status === "success" && result.notification) {
+    try {
+      await sendNotification(result.notification);
+    } catch (error) {
+      console.error("New order email notification failed", error);
+    }
+  }
+
+  return result.state;
 }
 
 export async function submitOrderForCurrentSession(

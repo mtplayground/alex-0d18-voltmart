@@ -81,14 +81,22 @@ function createOrderSubmissionClient(cartValue: unknown = cart) {
 
 describe("order submission actions", () => {
   let client: ReturnType<typeof createOrderSubmissionClient>;
+  let sendNotification: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     client = createOrderSubmissionClient();
+    sendNotification = vi.fn().mockResolvedValue(undefined);
   });
 
-  it("creates an order from the current cart and clears the cart", async () => {
+  it("creates an order from the current cart, clears the cart, and sends notification", async () => {
     await expect(
-      submitOrderForSession(createFormData(checkoutValues), sessionId, client, orderNumber),
+      submitOrderForSession(
+        createFormData(checkoutValues),
+        sessionId,
+        client,
+        orderNumber,
+        sendNotification,
+      ),
     ).resolves.toMatchObject({
       status: "success",
       message: "Order submitted",
@@ -126,6 +134,33 @@ describe("order submission actions", () => {
         orderNumber: true,
       },
     });
+    expect(sendNotification).toHaveBeenCalledWith({
+      orderId: "order_1",
+      orderNumber,
+      customerName: checkoutValues.customerName,
+      customerEmail: checkoutValues.customerEmail,
+      customerPhone: checkoutValues.customerPhone,
+      shippingName: checkoutValues.shippingName,
+      shippingAddressLine1: checkoutValues.shippingAddressLine1,
+      shippingAddressLine2: null,
+      shippingCity: checkoutValues.shippingCity,
+      shippingRegion: checkoutValues.shippingRegion,
+      shippingPostalCode: checkoutValues.shippingPostalCode,
+      shippingCountry: checkoutValues.shippingCountry,
+      subtotalCents: 99800,
+      shippingCents: 0,
+      taxCents: 0,
+      totalCents: 99800,
+      items: [
+        {
+          productName: "Compact 5G Phone",
+          productSlug: "compact-5g-phone",
+          unitPriceCents: 49900,
+          quantity: 2,
+          lineTotalCents: 99800,
+        },
+      ],
+    });
     expect(client.cartItem.deleteMany).toHaveBeenCalledWith({
       where: {
         cartId,
@@ -140,20 +175,27 @@ describe("order submission actions", () => {
 
   it("does not open a transaction when checkout details are invalid", async () => {
     await expect(
-      submitOrderForSession(createFormData({}), sessionId, client, orderNumber),
+      submitOrderForSession(createFormData({}), sessionId, client, orderNumber, sendNotification),
     ).resolves.toMatchObject({
       status: "error",
       message: "Review the highlighted fields",
     });
 
     expect(client.$transaction).not.toHaveBeenCalled();
+    expect(sendNotification).not.toHaveBeenCalled();
   });
 
   it("rejects missing carts", async () => {
     client = createOrderSubmissionClient(null);
 
     await expect(
-      submitOrderForSession(createFormData(checkoutValues), sessionId, client, orderNumber),
+      submitOrderForSession(
+        createFormData(checkoutValues),
+        sessionId,
+        client,
+        orderNumber,
+        sendNotification,
+      ),
     ).resolves.toMatchObject({
       status: "error",
       message: "Cart is empty",
@@ -161,6 +203,7 @@ describe("order submission actions", () => {
 
     expect(client.order.create).not.toHaveBeenCalled();
     expect(client.cart.delete).not.toHaveBeenCalled();
+    expect(sendNotification).not.toHaveBeenCalled();
   });
 
   it("rejects unavailable cart products", async () => {
@@ -178,7 +221,13 @@ describe("order submission actions", () => {
     });
 
     await expect(
-      submitOrderForSession(createFormData(checkoutValues), sessionId, client, orderNumber),
+      submitOrderForSession(
+        createFormData(checkoutValues),
+        sessionId,
+        client,
+        orderNumber,
+        sendNotification,
+      ),
     ).resolves.toMatchObject({
       status: "error",
       message: "Compact 5G Phone is not available",
@@ -186,6 +235,28 @@ describe("order submission actions", () => {
 
     expect(client.order.create).not.toHaveBeenCalled();
     expect(client.cartItem.deleteMany).not.toHaveBeenCalled();
+    expect(sendNotification).not.toHaveBeenCalled();
+  });
+
+  it("does not fail order submission when notification sending fails", async () => {
+    sendNotification.mockRejectedValue(new Error("email unavailable"));
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    await expect(
+      submitOrderForSession(
+        createFormData(checkoutValues),
+        sessionId,
+        client,
+        orderNumber,
+        sendNotification,
+      ),
+    ).resolves.toMatchObject({
+      status: "success",
+      orderNumber,
+    });
+
+    expect(errorSpy).toHaveBeenCalledWith("New order email notification failed", expect.any(Error));
+    errorSpy.mockRestore();
   });
 
   it("creates stable order number prefixes with random suffixes", () => {
