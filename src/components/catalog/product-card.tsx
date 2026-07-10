@@ -13,7 +13,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const accentClass = getProductAccentClass(product.category.slug);
 
   return (
-    <article className="group flex min-h-[28rem] flex-col overflow-hidden rounded-card border border-border bg-panel-strong shadow-soft transition hover:-translate-y-1 hover:shadow-glow">
+    <article className="surface-card-strong group flex min-h-[28rem] flex-col overflow-hidden transition hover:-translate-y-1 hover:shadow-glow">
       <div className={`relative aspect-[4/3] bg-gradient-to-br ${accentClass}`}>
         <Image
           src={getProductImageSrc(product.imageKeys[0])}
@@ -47,7 +47,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
           <Link
             href={`/products/${product.slug}`}
-            className="text-sm font-semibold text-electric underline-offset-4 hover:underline"
+            className="text-sm font-black text-electric underline-offset-4 hover:underline"
           >
             View details
           </Link>

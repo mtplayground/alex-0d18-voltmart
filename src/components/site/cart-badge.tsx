@@ -47,10 +47,10 @@ export function CartBadge() {
     <Link
       href="/cart"
       aria-label={label}
-      className="relative inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-panel-strong px-4 text-sm font-black text-ink shadow-soft transition hover:border-electric/40 hover:text-electric"
+      className="relative inline-flex min-h-11 items-center gap-2 rounded-full border border-white/80 bg-white/80 px-4 text-sm font-black text-ink shadow-soft transition hover:border-electric/40 hover:text-electric"
     >
       <span aria-hidden="true">Cart</span>
-      <span className="inline-flex min-h-6 min-w-6 items-center justify-center rounded-full bg-electric px-2 text-xs font-black text-white">
+      <span className="inline-flex min-h-6 min-w-6 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff5a5f,#2364ff)] px-2 text-xs font-black text-white">
         {itemCount}
       </span>
     </Link>

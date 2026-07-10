@@ -34,19 +34,19 @@ export default async function CartPage() {
     <main className="app-shell">
       <div className="page-frame">
         <section aria-labelledby="cart-title">
-          <p className="eyebrow">Cart</p>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h1 id="cart-title" className="page-title">
-                Shopping cart
-              </h1>
-              <p className="page-copy">
-                Review selected electronics, adjust quantities, and continue to checkout.
-              </p>
+          <div className="hero-band">
+            <p className="eyebrow">Cart</p>
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <h1 id="cart-title" className="page-title">
+                  Shopping cart
+                </h1>
+                <p className="page-copy">
+                  Review selected electronics, adjust quantities, and continue to checkout.
+                </p>
+              </div>
+              <p className="count-pill">{itemCount} {itemCount === 1 ? "item" : "items"}</p>
             </div>
-            <p className="rounded-card border border-border bg-panel-strong px-4 py-2 text-sm font-semibold text-muted">
-              {itemCount} {itemCount === 1 ? "item" : "items"}
-            </p>
           </div>
 
           {cart && cart.items.length > 0 ? (
@@ -59,7 +59,7 @@ export default async function CartPage() {
                   return (
                     <article
                       key={item.id}
-                      className="grid gap-4 rounded-card border border-border bg-panel-strong p-4 shadow-soft sm:grid-cols-[140px_minmax(0,1fr)]"
+                      className="surface-card grid gap-4 p-4 sm:grid-cols-[140px_minmax(0,1fr)]"
                     >
                       <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-canvas">
                         <Image
@@ -153,7 +153,7 @@ export default async function CartPage() {
                 })}
               </section>
 
-              <aside className="rounded-card border border-border bg-panel-strong p-5 shadow-soft">
+              <aside className="surface-card-strong p-5">
                 <h2 className="text-xl font-black text-ink">Order summary</h2>
                 <dl className="mt-5 space-y-3">
                   <div className="flex items-center justify-between gap-4 text-sm">
@@ -180,14 +180,14 @@ export default async function CartPage() {
                 </div>
                 <Link
                   href="/checkout"
-                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-card bg-electric px-5 text-base font-black text-white shadow-glow transition hover:bg-violet"
+                  className="primary-action mt-6 w-full px-5 text-base"
                 >
                   Proceed to checkout
                 </Link>
               </aside>
             </div>
           ) : (
-            <section className="mt-8 rounded-card border border-dashed border-border bg-panel-strong p-8 text-center shadow-soft">
+            <section className="surface-card mt-8 p-8 text-center">
               <h2 className="text-2xl font-black text-ink">Your cart is empty</h2>
               <p className="mx-auto mt-3 max-w-xl text-muted">
                 Add electronics from the catalog and they will stay here for your current shopping
@@ -195,7 +195,7 @@ export default async function CartPage() {
               </p>
               <Link
                 href="/"
-                className="mt-6 inline-flex min-h-12 items-center rounded-card bg-electric px-5 text-base font-black text-white shadow-glow transition hover:bg-violet"
+                className="primary-action mt-6 px-5 text-base"
               >
                 Continue shopping
               </Link>

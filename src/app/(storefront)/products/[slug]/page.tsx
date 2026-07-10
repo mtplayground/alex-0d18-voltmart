@@ -93,7 +93,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
         <section className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.75fr)] lg:items-start">
           <div
-            className={`relative aspect-[4/3] overflow-hidden rounded-card bg-gradient-to-br ${accentClass}`}
+            className={`relative aspect-[4/3] overflow-hidden rounded-card border border-white/70 bg-gradient-to-br shadow-soft ${accentClass}`}
           >
             <Image
               src={imageSrc}
@@ -107,7 +107,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
           <section
             aria-labelledby="product-title"
-            className="rounded-card bg-panel-strong p-6 shadow-soft"
+            className="surface-card-strong p-6"
           >
             <p className="eyebrow">{product.category.name}</p>
             <h1 id="product-title" className="text-4xl font-black leading-tight text-ink">
@@ -138,7 +138,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               <button
                 type="button"
                 disabled={!product.inStock}
-                className="min-h-12 w-full rounded-card bg-electric px-5 text-base font-black text-white shadow-glow transition hover:bg-violet disabled:cursor-not-allowed disabled:bg-muted disabled:shadow-none"
+                className="primary-action w-full px-5 text-base"
               >
                 Add to cart
               </button>

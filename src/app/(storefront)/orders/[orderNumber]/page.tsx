@@ -61,28 +61,27 @@ export default async function OrderConfirmationPage({ params }: OrderConfirmatio
     <main className="app-shell">
       <div className="page-frame">
         <section aria-labelledby="confirmation-title">
-          <p className="eyebrow">Order confirmed</p>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h1 id="confirmation-title" className="page-title">
-                Thanks, {order.customerName}
-              </h1>
-              <p className="page-copy">
-                Your order was submitted. Keep this reference for your records.
-              </p>
+          <div className="hero-band">
+            <p className="eyebrow">Order confirmed</p>
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <h1 id="confirmation-title" className="page-title">
+                  Thanks, {order.customerName}
+                </h1>
+                <p className="page-copy">
+                  Your order was submitted. Keep this reference for your records.
+                </p>
+              </div>
+              <Link href="/" className="secondary-action px-4 text-sm">
+                Continue shopping
+              </Link>
             </div>
-            <Link
-              href="/"
-              className="inline-flex min-h-11 items-center justify-center rounded-card border border-border bg-panel-strong px-4 text-sm font-black text-ink shadow-soft transition hover:border-electric/40 hover:text-electric"
-            >
-              Continue shopping
-            </Link>
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
             <section
               aria-label="Order items"
-              className="rounded-card border border-border bg-panel-strong p-5 shadow-soft"
+              className="surface-card-strong p-5"
             >
               <div className="flex flex-col gap-3 border-b border-border pb-5 sm:flex-row sm:items-start sm:justify-between">
                 <div>
@@ -99,7 +98,7 @@ export default async function OrderConfirmationPage({ params }: OrderConfirmatio
                 {order.items.map((item) => (
                   <article
                     key={item.id}
-                    className="grid gap-4 rounded-card border border-border bg-panel p-4 sm:grid-cols-[96px_minmax(0,1fr)]"
+                    className="grid gap-4 rounded-card border border-white/80 bg-white/70 p-4 sm:grid-cols-[96px_minmax(0,1fr)]"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-canvas">
                       <Image
@@ -134,7 +133,7 @@ export default async function OrderConfirmationPage({ params }: OrderConfirmatio
             </section>
 
             <aside className="space-y-6">
-              <section className="rounded-card border border-border bg-panel-strong p-5 shadow-soft">
+              <section className="surface-card-strong p-5">
                 <h2 className="text-xl font-black text-ink">Summary</h2>
                 <dl className="mt-5 space-y-3">
                   <div className="flex items-center justify-between gap-4 text-sm">
@@ -173,7 +172,7 @@ export default async function OrderConfirmationPage({ params }: OrderConfirmatio
                 </div>
               </section>
 
-              <section className="rounded-card border border-border bg-panel-strong p-5 shadow-soft">
+              <section className="surface-card-strong p-5">
                 <h2 className="text-xl font-black text-ink">Delivery details</h2>
                 <div className="mt-4 space-y-4 text-sm leading-6">
                   <div>
