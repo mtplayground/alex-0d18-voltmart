@@ -35,6 +35,15 @@ export default async function AdminHomePage() {
               Create, edit, and remove catalog products.
             </p>
           </Link>
+          <Link
+            href="/admin/orders"
+            className="rounded-card border border-border bg-panel-strong p-5 shadow-soft transition hover:border-electric/40"
+          >
+            <p className="text-xl font-black text-ink">Orders</p>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Review customer details, shipping addresses, and purchased items.
+            </p>
+          </Link>
         </div>
         <div className="mt-6 flex flex-col gap-4 rounded-card border border-border bg-panel-strong p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
           <div>
