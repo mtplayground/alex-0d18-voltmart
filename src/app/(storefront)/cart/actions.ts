@@ -42,3 +42,11 @@ export async function removeCartItem(productId: string) {
 
   return result;
 }
+
+export async function submitCartItemQuantityUpdate(productId: string, quantity: number) {
+  await updateCartItemQuantity(productId, quantity);
+}
+
+export async function submitCartItemRemoval(productId: string) {
+  await removeCartItem(productId);
+}
