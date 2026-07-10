@@ -45,22 +45,22 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
     <main className="app-shell">
       <div className="page-frame">
         <section aria-labelledby="catalog-title">
-          <p className="eyebrow">Storefront</p>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h1 id="catalog-title" className="page-title">
-                {heading}
-              </h1>
-              <p className="page-copy">
-                Browse colorful electronics across phones, laptops, audio, and accessories.
-              </p>
+          <div className="hero-band">
+            <p className="eyebrow">Storefront</p>
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <h1 id="catalog-title" className="page-title">
+                  {heading}
+                </h1>
+                <p className="page-copy">
+                  Browse colorful electronics across phones, laptops, audio, and accessories.
+                </p>
+              </div>
+              <p className="count-pill">{products.length} {productLabel}</p>
             </div>
-            <p className="rounded-card border border-border bg-panel-strong px-4 py-2 text-sm font-semibold text-muted">
-              {products.length} {productLabel}
-            </p>
-          </div>
 
-          <CategoryFilter categories={categories} selectedCategorySlug={selectedCategorySlug} />
+            <CategoryFilter categories={categories} selectedCategorySlug={selectedCategorySlug} />
+          </div>
 
           {products.length > 0 ? (
             <section
@@ -73,7 +73,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
             </section>
           ) : (
             <section
-              className="mt-8 rounded-card border border-dashed border-border bg-panel-strong p-8 text-center"
+              className="surface-card mt-8 p-8 text-center"
               aria-live="polite"
             >
               <h2 className="text-xl font-bold text-ink">No products found</h2>

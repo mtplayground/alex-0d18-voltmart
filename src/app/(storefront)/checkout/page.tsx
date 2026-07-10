@@ -29,28 +29,27 @@ export default async function CheckoutPage() {
     <main className="app-shell">
       <div className="page-frame">
         <section aria-labelledby="checkout-title">
-          <p className="eyebrow">Checkout</p>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h1 id="checkout-title" className="page-title">
-                Guest checkout
-              </h1>
-              <p className="page-copy">
-                Enter contact and shipping details for the current cart. No payment is collected.
-              </p>
+          <div className="hero-band">
+            <p className="eyebrow">Checkout</p>
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <h1 id="checkout-title" className="page-title">
+                  Guest checkout
+                </h1>
+                <p className="page-copy">
+                  Enter contact and shipping details for the current cart. No payment is collected.
+                </p>
+              </div>
+              <Link href="/cart" className="secondary-action px-4 text-sm">
+                Back to cart
+              </Link>
             </div>
-            <Link
-              href="/cart"
-              className="inline-flex min-h-11 items-center justify-center rounded-card border border-border bg-panel-strong px-4 text-sm font-black text-ink shadow-soft transition hover:border-electric/40 hover:text-electric"
-            >
-              Back to cart
-            </Link>
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
             <CheckoutForm disabled={!hasItems} />
 
-            <aside className="rounded-card border border-border bg-panel-strong p-5 shadow-soft">
+            <aside className="surface-card-strong p-5">
               <h2 className="text-xl font-black text-ink">Order summary</h2>
               <dl className="mt-5 space-y-3">
                 <div className="flex items-center justify-between gap-4 text-sm">
@@ -74,7 +73,7 @@ export default async function CheckoutPage() {
               {!hasItems ? (
                 <Link
                   href="/"
-                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-card bg-electric px-5 text-base font-black text-white shadow-glow transition hover:bg-violet"
+                  className="primary-action mt-6 w-full px-5 text-base"
                 >
                   Continue shopping
                 </Link>

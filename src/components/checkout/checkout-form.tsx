@@ -112,7 +112,7 @@ function SubmitButton({ disabled }: CheckoutFormProps) {
     <button
       type="submit"
       disabled={disabled || pending}
-      className="min-h-12 w-full rounded-card bg-electric px-5 text-base font-black text-white shadow-glow transition hover:bg-violet disabled:cursor-not-allowed disabled:bg-muted disabled:shadow-none"
+      className="primary-action w-full px-5 text-base"
     >
       {pending ? "Submitting order" : "Submit order"}
     </button>
@@ -150,7 +150,7 @@ function Field({
         pattern={config.pattern}
         aria-invalid={error ? "true" : undefined}
         aria-describedby={error ? errorId : undefined}
-        className="mt-2 min-h-12 w-full rounded-card border border-border bg-panel-strong px-4 text-base text-ink outline-none transition focus:border-electric focus:ring-4 focus:ring-electric/15 disabled:cursor-not-allowed disabled:bg-border/40"
+        className="mt-2 min-h-12 w-full rounded-card border border-white/80 bg-white/80 px-4 text-base text-ink outline-none transition focus:border-electric focus:ring-4 focus:ring-electric/15 disabled:cursor-not-allowed disabled:bg-border/40"
       />
       {error ? (
         <span id={errorId} className="mt-2 block text-sm font-semibold text-coral">
@@ -175,7 +175,7 @@ function Fieldset({
   disabled: boolean;
 }>) {
   return (
-    <fieldset className="rounded-card border border-border bg-panel-strong p-5 shadow-soft">
+    <fieldset className="surface-card-strong p-5">
       <legend className="px-1 text-xl font-black text-ink">{title}</legend>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         {fields.map((field) => (
