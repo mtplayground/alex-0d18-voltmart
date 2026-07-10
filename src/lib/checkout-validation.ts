@@ -20,6 +20,8 @@ export type CheckoutFieldErrors = Partial<Record<CheckoutFieldName, string>>;
 export type CheckoutFormState = Readonly<{
   status: "idle" | "error" | "success";
   message?: string;
+  orderId?: string;
+  orderNumber?: string;
   values: CheckoutFormValues;
   errors: CheckoutFieldErrors;
 }>;

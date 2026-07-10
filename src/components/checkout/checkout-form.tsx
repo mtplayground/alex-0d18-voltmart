@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 
-import { validateCheckoutDetails } from "@/app/(storefront)/checkout/actions";
+import { submitCheckoutOrder } from "@/app/(storefront)/checkout/actions";
 import {
   initialCheckoutFormState,
   type CheckoutFieldName,
@@ -114,7 +114,7 @@ function SubmitButton({ disabled }: CheckoutFormProps) {
       disabled={disabled || pending}
       className="min-h-12 w-full rounded-card bg-electric px-5 text-base font-black text-white shadow-glow transition hover:bg-violet disabled:cursor-not-allowed disabled:bg-muted disabled:shadow-none"
     >
-      {pending ? "Checking details" : "Review details"}
+      {pending ? "Submitting order" : "Submit order"}
     </button>
   );
 }
@@ -193,7 +193,7 @@ function Fieldset({
 }
 
 export function CheckoutForm({ disabled }: CheckoutFormProps) {
-  const [state, formAction] = useActionState(validateCheckoutDetails, initialCheckoutFormState);
+  const [state, formAction] = useActionState(submitCheckoutOrder, initialCheckoutFormState);
 
   return (
     <form action={formAction} className="space-y-5">
@@ -207,6 +207,9 @@ export function CheckoutForm({ disabled }: CheckoutFormProps) {
           role={state.status === "error" ? "alert" : "status"}
         >
           {state.message}
+          {state.status === "success" && state.orderNumber ? (
+            <span className="mt-1 block">Reference {state.orderNumber}</span>
+          ) : null}
         </p>
       ) : null}
       <Fieldset
