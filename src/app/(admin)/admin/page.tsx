@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import Link from "next/link";
 
 import { logoutAdmin } from "@/app/(admin)/admin/actions";
 import { adminSessionCookieName, verifyAdminSessionToken } from "@/lib/admin-auth";
@@ -24,6 +25,17 @@ export default async function AdminHomePage() {
           Admin dashboard
         </h1>
         <p className="page-copy">Protected admin area for managing store operations.</p>
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <Link
+            href="/admin/products"
+            className="rounded-card border border-border bg-panel-strong p-5 shadow-soft transition hover:border-electric/40"
+          >
+            <p className="text-xl font-black text-ink">Products</p>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Create, edit, and remove catalog products.
+            </p>
+          </Link>
+        </div>
         <div className="mt-6 flex flex-col gap-4 rounded-card border border-border bg-panel-strong p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-muted">Signed in as</p>
