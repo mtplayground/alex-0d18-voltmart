@@ -25,17 +25,17 @@ export function ProductCard({ product }: ProductCardProps) {
         />
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-xs font-bold uppercase text-electric">{product.category.name}</p>
             <h2 className="mt-2 text-xl font-bold leading-tight text-ink">{product.name}</h2>
           </div>
-          <p className="rounded-full bg-sun/30 px-3 py-1 text-sm font-black text-ink">
+          <p className="w-fit shrink-0 rounded-full bg-sun/30 px-3 py-1 text-sm font-black text-ink">
             {formatCurrencyFromCents(product.priceCents)}
           </p>
         </div>
         <p className="mt-4 line-clamp-3 text-sm leading-6 text-muted">{product.description}</p>
-        <div className="mt-auto flex items-center justify-between pt-5">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
           <span
             className={
               product.inStock
