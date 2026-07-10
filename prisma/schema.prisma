@@ -20,19 +20,20 @@ model Category {
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   name        String
-  slug        String   @unique
+  slug        String      @unique
   description String
   priceCents  Int
-  imageKeys   String[] @default([])
-  inStock     Boolean  @default(true)
-  isActive    Boolean  @default(true)
+  imageKeys   String[]    @default([])
+  inStock     Boolean     @default(true)
+  isActive    Boolean     @default(true)
   cartItems   CartItem[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   @@index([categoryId])
   @@index([inStock])
@@ -62,5 +63,57 @@ model CartItem {
 
   @@unique([cartId, productId])
   @@index([cartId])
+  @@index([productId])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  FULFILLED
+  CANCELLED
+}
+
+model Order {
+  id                   String      @id @default(cuid())
+  orderNumber          String      @unique
+  customerName         String
+  customerEmail        String
+  customerPhone        String?
+  shippingName         String
+  shippingAddressLine1 String
+  shippingAddressLine2 String?
+  shippingCity         String
+  shippingRegion       String
+  shippingPostalCode   String
+  shippingCountry      String
+  subtotalCents        Int
+  shippingCents        Int         @default(0)
+  taxCents             Int         @default(0)
+  totalCents           Int
+  status               OrderStatus @default(PENDING)
+  items                OrderItem[]
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  @@index([customerEmail])
+  @@index([createdAt])
+  @@index([status])
+}
+
+model OrderItem {
+  id              String   @id @default(cuid())
+  orderId         String
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productId       String?
+  product         Product? @relation(fields: [productId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  productName     String
+  productSlug     String
+  productImageKey String?
+  unitPriceCents  Int
+  quantity        Int
+  lineTotalCents  Int
+  createdAt       DateTime @default(now())
+
+  @@index([orderId])
   @@index([productId])
 }
