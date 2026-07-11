@@ -30,6 +30,13 @@ function SubmitButton({ label }: Readonly<{ label: string }>) {
   );
 }
 
+function errorAttributes(inputId: string, error: string | undefined) {
+  return {
+    "aria-invalid": error ? "true" : undefined,
+    "aria-describedby": error ? `${inputId}-error` : undefined,
+  } as const;
+}
+
 export function AdminProductForm({
   action,
   categories,
@@ -59,10 +66,13 @@ export function AdminProductForm({
             defaultValue={values.name}
             required
             maxLength={160}
+            {...errorAttributes("product-name", state.errors.name)}
             className="mt-2 min-h-12 w-full rounded-card border border-border bg-panel px-4 text-base text-ink outline-none transition focus:border-electric focus:ring-4 focus:ring-electric/15"
           />
           {state.errors.name ? (
-            <span className="mt-2 block text-sm font-semibold text-coral">{state.errors.name}</span>
+            <span id="product-name-error" className="mt-2 block text-sm font-semibold text-coral">
+              {state.errors.name}
+            </span>
           ) : null}
         </label>
 
@@ -74,10 +84,13 @@ export function AdminProductForm({
             defaultValue={values.slug}
             maxLength={180}
             pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+            {...errorAttributes("product-slug", state.errors.slug)}
             className="mt-2 min-h-12 w-full rounded-card border border-border bg-panel px-4 text-base text-ink outline-none transition focus:border-electric focus:ring-4 focus:ring-electric/15"
           />
           {state.errors.slug ? (
-            <span className="mt-2 block text-sm font-semibold text-coral">{state.errors.slug}</span>
+            <span id="product-slug-error" className="mt-2 block text-sm font-semibold text-coral">
+              {state.errors.slug}
+            </span>
           ) : null}
         </label>
 
@@ -88,6 +101,7 @@ export function AdminProductForm({
             name="categoryId"
             defaultValue={values.categoryId}
             required
+            {...errorAttributes("product-category", state.errors.categoryId)}
             className="mt-2 min-h-12 w-full rounded-card border border-border bg-panel px-4 text-base text-ink outline-none transition focus:border-electric focus:ring-4 focus:ring-electric/15"
           >
             <option value="">Select a category</option>
@@ -98,7 +112,10 @@ export function AdminProductForm({
             ))}
           </select>
           {state.errors.categoryId ? (
-            <span className="mt-2 block text-sm font-semibold text-coral">
+            <span
+              id="product-category-error"
+              className="mt-2 block text-sm font-semibold text-coral"
+            >
               {state.errors.categoryId}
             </span>
           ) : null}
@@ -114,10 +131,11 @@ export function AdminProductForm({
             defaultValue={values.price}
             placeholder="99.99"
             required
+            {...errorAttributes("product-price", state.errors.price)}
             className="mt-2 min-h-12 w-full rounded-card border border-border bg-panel px-4 text-base text-ink outline-none transition focus:border-electric focus:ring-4 focus:ring-electric/15"
           />
           {state.errors.price ? (
-            <span className="mt-2 block text-sm font-semibold text-coral">
+            <span id="product-price-error" className="mt-2 block text-sm font-semibold text-coral">
               {state.errors.price}
             </span>
           ) : null}
@@ -132,10 +150,14 @@ export function AdminProductForm({
             required
             rows={5}
             maxLength={2000}
+            {...errorAttributes("product-description", state.errors.description)}
             className="mt-2 w-full rounded-card border border-border bg-panel px-4 py-3 text-base text-ink outline-none transition focus:border-electric focus:ring-4 focus:ring-electric/15"
           />
           {state.errors.description ? (
-            <span className="mt-2 block text-sm font-semibold text-coral">
+            <span
+              id="product-description-error"
+              className="mt-2 block text-sm font-semibold text-coral"
+            >
               {state.errors.description}
             </span>
           ) : null}
@@ -148,10 +170,14 @@ export function AdminProductForm({
             name="imageKeys"
             defaultValue={values.imageKeys}
             rows={4}
+            {...errorAttributes("product-image-keys", state.errors.imageKeys)}
             className="mt-2 w-full rounded-card border border-border bg-panel px-4 py-3 text-base text-ink outline-none transition focus:border-electric focus:ring-4 focus:ring-electric/15"
           />
           {state.errors.imageKeys ? (
-            <span className="mt-2 block text-sm font-semibold text-coral">
+            <span
+              id="product-image-keys-error"
+              className="mt-2 block text-sm font-semibold text-coral"
+            >
               {state.errors.imageKeys}
             </span>
           ) : null}
@@ -164,10 +190,14 @@ export function AdminProductForm({
             name="imageUpload"
             type="file"
             accept="image/jpeg,image/png,image/webp,image/gif"
+            {...errorAttributes("product-image-upload", state.errors.imageUpload)}
             className="mt-2 block w-full rounded-card border border-border bg-panel px-4 py-3 text-base text-ink file:mr-4 file:rounded-card file:border-0 file:bg-electric file:px-4 file:py-2 file:text-sm file:font-black file:text-white focus:border-electric focus:outline-none focus:ring-4 focus:ring-electric/15"
           />
           {state.errors.imageUpload ? (
-            <span className="mt-2 block text-sm font-semibold text-coral">
+            <span
+              id="product-image-upload-error"
+              className="mt-2 block text-sm font-semibold text-coral"
+            >
               {state.errors.imageUpload}
             </span>
           ) : null}

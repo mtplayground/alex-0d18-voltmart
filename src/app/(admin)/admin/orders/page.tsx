@@ -2,6 +2,7 @@ import type { OrderStatus } from "@prisma/client";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import { listAdminOrders } from "@/lib/admin-orders";
 import { formatCurrencyFromCents } from "@/lib/format";
 
@@ -122,12 +123,19 @@ export default async function AdminOrdersPage() {
             </div>
           </div>
         ) : (
-          <section className="mt-8 rounded-card border border-dashed border-border bg-panel-strong p-8 text-center shadow-soft">
-            <h2 className="text-2xl font-black text-ink">No orders yet</h2>
-            <p className="mx-auto mt-3 max-w-xl text-muted">
+          <EmptyState
+            title="No orders yet"
+            action={
+              <Link href="/" className="primary-action px-5 text-base">
+                Open storefront
+              </Link>
+            }
+            className="mt-8 border-dashed border-border bg-panel-strong shadow-soft"
+          >
+            <p>
               Submitted guest checkout orders will appear here newest first.
             </p>
-          </section>
+          </EmptyState>
         )}
       </section>
     </div>

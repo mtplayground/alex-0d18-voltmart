@@ -6,6 +6,7 @@ import {
   submitCartItemQuantityUpdate,
   submitCartItemRemoval,
 } from "@/app/(storefront)/cart/actions";
+import { EmptyState } from "@/components/ui/empty-state";
 import { getCartBySessionId } from "@/lib/cart";
 import { maxCartItemQuantity } from "@/lib/cart-actions";
 import { getCartSessionId } from "@/lib/cart-session";
@@ -187,19 +188,19 @@ export default async function CartPage() {
               </aside>
             </div>
           ) : (
-            <section className="surface-card mt-8 p-8 text-center">
-              <h2 className="text-2xl font-black text-ink">Your cart is empty</h2>
-              <p className="mx-auto mt-3 max-w-xl text-muted">
+            <EmptyState
+              title="Your cart is empty"
+              action={
+                <Link href="/" className="primary-action px-5 text-base">
+                  Continue shopping
+                </Link>
+              }
+            >
+              <p>
                 Add electronics from the catalog and they will stay here for your current shopping
                 session.
               </p>
-              <Link
-                href="/"
-                className="primary-action mt-6 px-5 text-base"
-              >
-                Continue shopping
-              </Link>
-            </section>
+            </EmptyState>
           )}
         </section>
       </div>
