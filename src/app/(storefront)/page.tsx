@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { CategoryFilter } from "@/components/catalog/category-filter";
 import { ProductCard } from "@/components/catalog/product-card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { listCategories, listProducts } from "@/lib/catalog";
 
 export const revalidate = 300;
@@ -72,16 +74,22 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
               ))}
             </section>
           ) : (
-            <section
-              className="surface-card mt-8 p-8 text-center"
-              aria-live="polite"
+            <EmptyState
+              title="No products found"
+              live
+              action={
+                selectedCategorySlug ? (
+                  <Link href="/" className="primary-action px-5 text-base">
+                    View all products
+                  </Link>
+                ) : null
+              }
             >
-              <h2 className="text-xl font-bold text-ink">No products found</h2>
-              <p className="mx-auto mt-2 max-w-xl text-muted">
+              <p>
                 There are no active products in this category yet. Choose another category to keep
                 browsing.
               </p>
-            </section>
+            </EmptyState>
           )}
         </section>
       </div>

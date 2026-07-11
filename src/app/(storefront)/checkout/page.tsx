@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CheckoutForm } from "@/components/checkout/checkout-form";
+import { EmptyState } from "@/components/ui/empty-state";
 import { getCartBySessionId } from "@/lib/cart";
 import { getCartSessionId } from "@/lib/cart-session";
 import { getCartItemCount, getCartSubtotalCents } from "@/lib/cart-summary";
@@ -47,7 +48,21 @@ export default async function CheckoutPage() {
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
-            <CheckoutForm disabled={!hasItems} />
+            {hasItems ? (
+              <CheckoutForm disabled={false} />
+            ) : (
+              <EmptyState
+                title="Your cart is empty"
+                action={
+                  <Link href="/" className="primary-action px-5 text-base">
+                    Continue shopping
+                  </Link>
+                }
+                className=""
+              >
+                <p>Add items to your cart before entering checkout details.</p>
+              </EmptyState>
+            )}
 
             <aside className="surface-card-strong p-5">
               <h2 className="text-xl font-black text-ink">Order summary</h2>
@@ -70,14 +85,6 @@ export default async function CheckoutPage() {
                   This checkout collects delivery details only; no payment is collected.
                 </p>
               </div>
-              {!hasItems ? (
-                <Link
-                  href="/"
-                  className="primary-action mt-6 w-full px-5 text-base"
-                >
-                  Continue shopping
-                </Link>
-              ) : null}
             </aside>
           </div>
         </section>

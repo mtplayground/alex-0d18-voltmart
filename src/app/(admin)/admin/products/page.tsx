@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import { formatCurrencyFromCents } from "@/lib/format";
 import { listAdminProducts } from "@/lib/admin-products";
 
@@ -107,18 +108,22 @@ export default async function AdminProductsPage() {
             </div>
           </div>
         ) : (
-          <section className="mt-8 rounded-card border border-dashed border-border bg-panel-strong p-8 text-center shadow-soft">
-            <h2 className="text-2xl font-black text-ink">No products yet</h2>
-            <p className="mx-auto mt-3 max-w-xl text-muted">
+          <EmptyState
+            title="No products yet"
+            action={
+              <Link
+                href="/admin/products/new"
+                className="inline-flex min-h-12 items-center rounded-card bg-electric px-5 text-base font-black text-white shadow-glow transition hover:bg-violet"
+              >
+                New product
+              </Link>
+            }
+            className="mt-8 border-dashed border-border bg-panel-strong shadow-soft"
+          >
+            <p>
               Add the first catalog item and it will appear in the storefront.
             </p>
-            <Link
-              href="/admin/products/new"
-              className="mt-6 inline-flex min-h-12 items-center rounded-card bg-electric px-5 text-base font-black text-white shadow-glow transition hover:bg-violet"
-            >
-              New product
-            </Link>
-          </section>
+          </EmptyState>
         )}
       </section>
     </div>
